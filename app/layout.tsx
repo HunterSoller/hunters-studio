@@ -28,6 +28,14 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body className={`${geistSans.variable} font-sans min-h-screen`}>
         {children}
+        <a
+          href="https://www.instagram.com/hunter.soller"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fixed bottom-4 left-4 z-50 text-sm text-white/80 hover:text-white transition-colors"
+        >
+          DM on insta
+        </a>
         <span
           aria-hidden
           className="fixed bottom-4 right-4 z-0 text-sm text-white/30 pointer-events-none"
