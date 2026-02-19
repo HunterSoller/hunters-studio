@@ -1,0 +1,13 @@
+# dependencies
+node_modules
+.next
+
+# env (do not commit secrets)
+.env*.local
+
+# debug
+npm-debug.log*
+
+# misc
+.DS_Store
+*.pem
