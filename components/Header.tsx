@@ -37,9 +37,10 @@ export default function Header() {
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <Link
           href="/"
-          className="text-lg font-medium text-white tracking-tight hover:opacity-90 transition-opacity"
+          className="relative text-sm text-white/80 hover:text-white transition-colors group"
         >
-          The Studio
+          HUNTER&apos;S STUDIO
+          <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-white/80 group-hover:w-full transition-all duration-200" />
         </Link>
         <span className="text-sm text-white/70 hidden sm:inline">
           100 Alamosa Way Unit 402
