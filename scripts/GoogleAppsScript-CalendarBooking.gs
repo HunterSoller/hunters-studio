@@ -80,6 +80,27 @@ function doPost(e) {
     } catch (parseErr) {
       return jsonResponse(400, { error: 'Invalid JSON body' });
     }
+    var action = body.action || 'book';
+
+    // Handle cancellation requests
+    if (action === 'cancel') {
+      var cancelEventId = body.eventId || '';
+      if (!cancelEventId) {
+        return jsonResponse(400, { error: 'Missing eventId for cancellation' });
+      }
+      var cancelCalendar = CalendarApp.getDefaultCalendar();
+      if (!cancelCalendar) {
+        return jsonResponse(500, { error: 'No default calendar. Set a default in Google Calendar.' });
+      }
+      var ev = cancelCalendar.getEventById(cancelEventId);
+      if (!ev) {
+        return jsonResponse(404, { error: 'Event not found for cancellation' });
+      }
+      ev.deleteEvent();
+      return jsonResponse(200, { success: true, cancelled: true });
+    }
+
+    // Normal booking flow
     var firstName = body.firstName || '';
     var lastName = body.lastName || '';
     var dateStr = body.date || '';
@@ -117,8 +138,8 @@ function doPost(e) {
       return jsonResponse(400, { error: 'Cannot book a time in the past' });
     }
 
-    calendar.createEvent(title, start, end, { description: desc });
-    return jsonResponse(200, { success: true });
+    var event = calendar.createEvent(title, start, end, { description: desc });
+    return jsonResponse(200, { success: true, eventId: event.getId() });
   } catch (err) {
     return jsonResponse(500, { error: 'Booking error: ' + (err.message || String(err)) });
   }

@@ -5,6 +5,7 @@ const MAIL_SECURE = process.env.MAIL_SECURE === "true";
 const MAIL_USER = process.env.MAIL_USER || "";
 const MAIL_PASS = process.env.MAIL_PASS || "";
 const MAIL_FROM = process.env.MAIL_FROM || "";
+const SITE_URL = process.env.SITE_URL || "";
 
 const STUDIO_ADDRESS = "100 Alamosa Way Unit 402";
 
@@ -87,6 +88,8 @@ export async function POST(request: Request) {
     });
     const data = await res.json().catch(() => ({}));
     const status = res.status;
+    const eventId =
+      data && typeof (data as any).eventId === "string" ? (data as any).eventId : "";
 
     // Send email confirmation if booking succeeded and mail is configured
     if (status === 200 && data?.success && typeof body === "object" && body !== null) {
@@ -98,6 +101,8 @@ export async function POST(request: Request) {
       const quote = "quote" in body && (typeof body.quote === "number" || typeof body.quote === "string") ? body.quote : null;
       const hoursNum = startTime && endTime ? durationHours(startTime, endTime) : null;
       const hoursLabel = hoursNum != null ? `${hoursNum} hour${hoursNum === 1 ? "" : "s"}` : "";
+      const baseUrl = SITE_URL || new URL(request.url).origin;
+      const cancelUrl = eventId ? `${baseUrl}/api/booking/cancel?eventId=${encodeURIComponent(eventId)}` : "";
       if (
         MAIL_HOST &&
         MAIL_USER &&
@@ -108,8 +113,12 @@ export async function POST(request: Request) {
         const timeRange = `${formatTime12h(startTime)} – ${formatTime12h(endTime)}`;
         const durationLine = hoursLabel ? `Duration: ${hoursLabel}\n` : "";
         const totalLine = quote != null ? `Total: $${quote}\n` : "";
-        const text = `Hi${firstName ? ` ${firstName}` : ""},\n\nYour booking at The Studio is confirmed.\n\nDate: ${date}\nTime: ${timeRange}\n${durationLine}${totalLine}Address: ${STUDIO_ADDRESS}\n\nSee you soon!`;
-        const html = `<p>Hi${firstName ? ` ${firstName}` : ""},</p><p>Your booking at The Studio is confirmed.</p><ul><li>Date: ${date}</li><li>Time: ${timeRange}</li>${hoursLabel ? `<li>Duration: ${hoursLabel}</li>` : ""}${quote != null ? `<li>Total: $${quote}</li>` : ""}<li>Address: ${STUDIO_ADDRESS}</li></ul><p>See you soon!</p>`;
+        const cancelText = cancelUrl ? `\nIf you need to cancel this session, open this link:\n${cancelUrl}\n` : "";
+        const text = `Hi${firstName ? ` ${firstName}` : ""},\n\nYour booking at The Studio is confirmed.\n\nDate: ${date}\nTime: ${timeRange}\n${durationLine}${totalLine}Address: ${STUDIO_ADDRESS}${cancelText}\nSee you soon!`;
+        const cancelHtml = cancelUrl
+          ? `<li>Cancel: <a href="${cancelUrl}">Cancel this session</a></li>`
+          : "";
+        const html = `<p>Hi${firstName ? ` ${firstName}` : ""},</p><p>Your booking at The Studio is confirmed.</p><ul><li>Date: ${date}</li><li>Time: ${timeRange}</li>${hoursLabel ? `<li>Duration: ${hoursLabel}</li>` : ""}${quote != null ? `<li>Total: $${quote}</li>` : ""}<li>Address: ${STUDIO_ADDRESS}</li>${cancelHtml}</ul><p>See you soon!</p>`;
         try {
           const nodemailer = await import("nodemailer");
           const transporter = nodemailer.default.createTransport({
