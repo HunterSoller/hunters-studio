@@ -37,8 +37,9 @@ export default function AboutSection({ asPage = false }: { asPage?: boolean }) {
               in the final mix.
             </p>
             <p>
-              As a student at the University at Buffalo, I&apos;ve built this space to balance creativity with technical
-              discipline.
+              I&apos;ve worked with over 40 artists and clients, specializing in hip-hop and vocal production. From
+              building custom vocal chains and presets to recording, mixing, and full production, my goal is to give every
+              artist a sound that feels polished, competitive, and uniquely their own.
             </p>
             <p>
               Feel free to call me if you have any questions:{" "}
