@@ -18,7 +18,7 @@ export function InstagramFloating() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="DM on Instagram"
-      className="group fixed bottom-4 left-4 z-[60] flex h-10 items-center gap-0 overflow-hidden border border-white/15 bg-ink/70 pl-2.5 pr-2.5 text-white/80 backdrop-blur-md transition-[gap,padding,border-color,color] duration-500 ease-out-expo hover:gap-2.5 hover:border-signal/70 hover:pr-3.5 hover:text-white sm:bottom-5 sm:left-5"
+      className="group fixed bottom-4 left-4 z-[60] hidden h-10 sm:flex items-center gap-0 overflow-hidden border border-white/15 bg-ink/70 pl-2.5 pr-2.5 text-white/80 backdrop-blur-md transition-[gap,padding,border-color,color] duration-500 ease-out-expo hover:gap-2.5 hover:border-signal/70 hover:pr-3.5 hover:text-white sm:bottom-5 sm:left-5"
     >
       <InstagramGlyph className="h-[18px] w-[18px] shrink-0" />
       <span className="max-w-0 overflow-hidden whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] transition-[max-width] duration-500 ease-out-expo group-hover:max-w-[10rem]">

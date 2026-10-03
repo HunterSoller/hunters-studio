@@ -43,7 +43,7 @@ export default function LandingHero() {
       id="top"
       ref={ref}
       aria-label="Hunter’s Studio"
-      className={`relative isolate flex min-h-[100svh] flex-col overflow-hidden ${ready ? "is-in" : ""}`}
+      className={`relative isolate flex min-h-screen flex-col overflow-hidden supports-[height:100lvh]:min-h-[100lvh] ${ready ? "is-in" : ""}`}
     >
       <div
         aria-hidden
@@ -56,7 +56,7 @@ export default function LandingHero() {
       </div>
 
       <div
-        className="shell flex flex-1 flex-col justify-between pb-8 pt-24 sm:pb-10 sm:pt-28"
+        className="shell flex min-h-screen flex-col justify-between pb-8 pt-24 supports-[height:100svh]:min-h-[100svh] sm:pb-10 sm:pt-28"
         style={{ opacity: "calc(1 - var(--hero-p, 0) * 1.4)" }}
       >
         {/* Top meta row */}
