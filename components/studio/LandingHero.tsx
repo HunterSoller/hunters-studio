@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import ScrollLink from "./ScrollLink";
 import { RATE, SITE } from "@/lib/site";
-import { cssVars } from "@/lib/motion";
+import { cssVars, smoothScrollTo } from "@/lib/motion";
 
 const HeroVisual = dynamic(() => import("./HeroVisual"), { ssr: false });
 
@@ -14,6 +14,9 @@ export default function LandingHero() {
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setReady(true));
+    // Arriving from another page via /#section: settle on the section once layout is in place.
+    const hash = window.location.hash.slice(1);
+    if (hash) requestAnimationFrame(() => smoothScrollTo(hash));
     const el = ref.current;
     if (!el) return () => cancelAnimationFrame(id);
 

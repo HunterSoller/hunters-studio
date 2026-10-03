@@ -23,19 +23,14 @@ export default function AboutSection({ asPage = false }: { asPage?: boolean }) {
         <div className="mt-12 grid gap-12 lg:grid-cols-12 lg:gap-8">
           <Reveal className="lg:col-span-8">
             <ScrollDrift distance={6}>
-              <Heading className="display text-[clamp(2.4rem,6.2vw,6.25rem)] font-[800] uppercase leading-[0.9] text-white">
+              <Heading className="font-mono text-[clamp(1.9rem,4.4vw,4.5rem)] font-light uppercase leading-[1.02] tracking-[-0.04em] text-white">
                 A focused room for artists who take their sound{" "}
-                <em
-                  className="font-serif text-[1.08em] font-normal normal-case italic tracking-[-0.01em] text-signal"
-                  style={{ fontVariationSettings: "normal" }}
-                >
-                  seriously.
-                </em>
+                <em className="not-italic normal-case text-signal">seriously.</em>
               </Heading>
             </ScrollDrift>
           </Reveal>
 
-          <Reveal delay={150} className="space-y-5 self-end text-[15px] leading-relaxed text-white/65 lg:col-span-4">
+          <Reveal delay={150} className="space-y-5 self-end font-mono text-[13px] leading-[1.8] text-white/65 lg:col-span-4">
             <p>
               With over four years of hands-on experience and clients across every genre, I approach each session with
               precision and intention — whether you&apos;re tracking vocals, building a record from scratch, or dialing
@@ -47,7 +42,7 @@ export default function AboutSection({ asPage = false }: { asPage?: boolean }) {
             </p>
             <p>
               Feel free to call me if you have any questions:{" "}
-              <a href={SITE.phoneHref} className="link-u whitespace-nowrap font-mono text-[13px] text-white">
+              <a href={SITE.phoneHref} className="link-u whitespace-nowrap text-white">
                 {SITE.phoneDisplay}
               </a>
             </p>

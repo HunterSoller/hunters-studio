@@ -51,6 +51,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        {/* Every full load / reload starts on the landing hero, not a restored position or #section. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{history.scrollRestoration="manual";if(location.hash)history.replaceState(null,"",location.pathname+location.search);var t=function(){window.scrollTo({top:0,left:0,behavior:"instant"})},u=0,m=function(){u=1};t();["wheel","touchstart","keydown","pointerdown"].forEach(function(e){addEventListener(e,m,{once:true,passive:true})});addEventListener("load",function(){setTimeout(function(){if(!u)t()},0)})}catch(e){}`,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} ${instrumentSerif.variable} font-sans min-h-screen`}
       >

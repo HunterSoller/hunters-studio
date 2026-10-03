@@ -16,10 +16,7 @@ export default function ScrollLink({ href, onClick, ...rest }: Props) {
     if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     const [path, hash] = href.split("#");
     if (!hash || (path && path !== pathname)) return;
-    if (smoothScrollTo(hash)) {
-      e.preventDefault();
-      window.history.replaceState(null, "", hash === "top" ? pathname : `#${hash}`);
-    }
+    if (smoothScrollTo(hash)) e.preventDefault();
   };
 
   return <Link href={href} onClick={handleClick} {...rest} />;

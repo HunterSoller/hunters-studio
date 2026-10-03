@@ -44,7 +44,8 @@ export function smoothScrollTo(id: string) {
   const el = document.getElementById(id) ?? (id === "top" ? document.body : null);
   if (!el) return false;
 
-  const target =
+  // Re-measured every frame so content resizing above the target (e.g. availability loading) can't throw it off.
+  const target = () =>
     id === "top" ? 0 : Math.max(0, el.getBoundingClientRect().top + window.scrollY - NAV_OFFSET);
 
   animateScrollTo(target, { minMs: 700, maxMs: 1600 }, () => {
@@ -67,20 +68,28 @@ export function revealStep(el: HTMLElement | null, offset = NAV_OFFSET + 16) {
   return () => window.clearTimeout(id);
 }
 
-function animateScrollTo(target: number, range: { minMs: number; maxMs: number }, onDone?: () => void) {
+function animateScrollTo(
+  target: number | (() => number),
+  range: { minMs: number; maxMs: number },
+  onDone?: () => void
+) {
+  const getTarget = typeof target === "function" ? target : () => target;
+  const root = document.documentElement;
+
   if (prefersReducedMotion()) {
-    window.scrollTo(0, target);
+    const prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    window.scrollTo(0, getTarget());
+    root.style.scrollBehavior = prev;
     onDone?.();
     return;
   }
 
-  const root = document.documentElement;
   const prevBehavior = root.style.scrollBehavior;
   root.style.scrollBehavior = "auto";
 
   const start = window.scrollY;
-  const dist = target - start;
-  const duration = Math.min(range.maxMs, Math.max(range.minMs, 400 + Math.abs(dist) * 0.45));
+  const duration = Math.min(range.maxMs, Math.max(range.minMs, 400 + Math.abs(getTarget() - start) * 0.45));
   const t0 = performance.now();
   let cancelled = false;
 
@@ -102,7 +111,7 @@ function animateScrollTo(target: number, range: { minMs: number; maxMs: number }
   const step = (now: number) => {
     if (cancelled) return cleanup();
     const p = Math.min(1, (now - t0) / duration);
-    window.scrollTo(0, start + dist * ease(p));
+    window.scrollTo(0, start + (getTarget() - start) * ease(p));
     if (p < 1) requestAnimationFrame(step);
     else {
       cleanup();
