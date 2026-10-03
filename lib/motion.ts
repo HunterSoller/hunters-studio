@@ -44,9 +44,12 @@ export function smoothScrollTo(id: string) {
   const el = document.getElementById(id) ?? (id === "top" ? document.body : null);
   if (!el) return false;
 
+  // Land on the section's label (its first words), not the padded section edge.
+  const anchor = el.querySelector<HTMLElement>("[data-scroll-anchor]") ?? el;
+  const gap = anchor === el ? 0 : 28;
   // Re-measured every frame so content resizing above the target (e.g. availability loading) can't throw it off.
   const target = () =>
-    id === "top" ? 0 : Math.max(0, el.getBoundingClientRect().top + window.scrollY - NAV_OFFSET);
+    id === "top" ? 0 : Math.max(0, anchor.getBoundingClientRect().top + window.scrollY - NAV_OFFSET - gap);
 
   animateScrollTo(target, { minMs: 700, maxMs: 1600 }, () => {
     if (el.tabIndex >= 0 || el.hasAttribute("tabindex")) el.focus({ preventScroll: true });

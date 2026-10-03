@@ -63,7 +63,7 @@ export default function Footer() {
       </div>
 
       <div aria-hidden className="shell select-none">
-        <ScrollDrift distance={12}>
+        <ScrollDrift distance={12} settle={0.12}>
           <p className="display text-outline whitespace-nowrap text-[min(7.5vw,8.1rem)] font-[800] uppercase leading-[0.85] py-[0.06em]">
             Hunter’s Studio
           </p>

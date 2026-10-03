@@ -5,13 +5,15 @@ import { prefersReducedMotion } from "@/lib/motion";
 
 type Props = {
   children: ReactNode;
-  /** Total horizontal travel in vw across the element's pass through the viewport. Negative drifts right. */
+  /** Starting horizontal offset in vw as the element enters. Negative starts it to the left. */
   distance?: number;
+  /** Fraction of the viewport height the element travels before it has fully settled into alignment. */
+  settle?: number;
   className?: string;
 };
 
-/** Slides its content sideways as it scrolls through the viewport. */
-export default function ScrollDrift({ children, distance = 8, className }: Props) {
+/** Slides its content sideways into alignment as it scrolls into view; it rests perfectly aligned once settled. */
+export default function ScrollDrift({ children, distance = 8, settle = 0.55, className }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -19,13 +21,15 @@ export default function ScrollDrift({ children, distance = 8, className }: Props
     if (!el || prefersReducedMotion()) return;
 
     let raf = 0;
+    let last = "";
     const update = () => {
       raf = 0;
       const rect = el.getBoundingClientRect();
       const vh = window.innerHeight;
-      if (rect.bottom < -100 || rect.top > vh + 100) return;
-      const p = Math.min(1, Math.max(0, (vh - rect.top) / (vh + rect.height)));
-      el.style.transform = `translate3d(${((0.5 - p) * distance).toFixed(3)}vw, 0, 0)`;
+      const p = Math.min(1, Math.max(0, (vh - rect.top) / (vh * settle)));
+      const offset = (1 - p) ** 3 * distance;
+      const next = offset === 0 ? "" : `translate3d(${offset.toFixed(3)}vw, 0, 0)`;
+      if (next !== last) el.style.transform = last = next;
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -38,13 +42,11 @@ export default function ScrollDrift({ children, distance = 8, className }: Props
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [distance]);
+  }, [distance, settle]);
 
   return (
     <div className={className}>
-      <div ref={ref} style={{ willChange: "transform" }}>
-        {children}
-      </div>
+      <div ref={ref}>{children}</div>
     </div>
   );
 }
